@@ -1,0 +1,112 @@
+{block content}
+{foreach $allCssVariables as $page=>$cssVariables}
+{syntax double}
+{{****************************************************************************}}
+/***************************** {{$page}} **************************************/
+{{******************************************************************************
+*   screen.less			    
+******************************************************************************}}
+.{{$page}}-body-page #user a,.{{$page}}-body-page #itemsList a,.{{$page}}-body-page #sidebar a,.{{$page}}-body-page .ui-widget a{
+    color:{{$cssVariables['cLinkDark']}} ;
+}
+.{{$page}}-body-page #user a:hover,.{{$page}}-body-page #itemsList a:hover,.{{$page}}-body-page #sidebar a:hover,.{{$page}}-body-page .ui-widget a:hover{
+	background-color: {{$cssVariables['cLinkDark']}} ;
+	color: {{$cssVariables['cLinkLight']}} ;
+}
+.{{$page}}-h1-page,  .{{$page}}-h1a-page { color: {{$cssVariables['cH1']}} ;}
+.{{$page}}-h1a-page:hover{color: {{$cssVariables['cH1Active']}} ;}
+{{*#ajax-spinner {background-color: {{$cssVariables['spinnerBackground']}} ;}*}}
+{{******************************************************************************
+*   screen.layout.less
+******************************************************************************}}
+.{{$page}}-body-page {background-color: {{$cssVariables['cPageBackground']}} ;}
+.{{$page}}-wrapper-page{
+	border-color: {{$cssVariables['cWrapperBorder']}} ;
+        background-color: {{$cssVariables['cWrapperBackground']}} ;
+}
+.{{$page}}-header-nav-page{
+	border-top-color: {{$cssVariables['cHeaderBorder']}} ;
+        background-color: {{$cssVariables['cHeaderBackground']}}  ;
+}
+.{{$page}}-header-nav-a-page.disabled {color:{{$cssVariables['cH1Active']}} !important ;}
+.{{$page}}-header-nav-a-page.disabled:hover {background: none !important ;}
+.{{$page}}-header-nav-a-page {color:{{$cssVariables['cNavLink']}} !important ;}
+.{{$page}}-header-nav-a-page:hover {background-color: {{$cssVariables['cNavLinkHover']}} !important ;}
+
+
+
+.{{$page}}-container-page {
+	border-top-color: {{$cssVariables['cContentBorder']}} ;
+	border-bottom-color: {{$cssVariables['cContentBorder']}} ;
+}
+{{******************************************************************************
+*   screen.content.less
+******************************************************************************}}
+{{*#viewControl,#bottomFixed {background-color: {{$cssVariables['cContentBackground']}} ;}*}}
+.{{$page}}-footer-page {color: {{$cssVariables['cFooterFont']}};}
+{{****************************************************************************}}
+.eventCalendar .{{$page}}{
+    background-color:{{$cssVariables['cLinkDark']}};
+    color:{{$cssVariables['cLinkLight']}};
+  
+}
+.eventCalendar .{{$page}}:hover, .eventCalendar .{{$page}}.active{
+	background-color:{{$cssVariables['cH1Active']}};
+}
+
+{{****************************************************************************}}
+{{syntax latte}}
+{/foreach}
+
+
+.eventCalendar .color-0{
+	background-color: #FFAA66 ;
+	color: black ;
+    }
+.eventCalendar .color-0:hover,.eventCalendar .color-0.active{
+	background-color: #AA6600 ;
+	color: white ;
+    }
+.eventCalendar .color-1{
+	background-color: #66FFAA ;
+	color: black ;
+    }
+.eventCalendar .color-1:hover,.eventCalendar .color-1.active{
+	background-color: #00AA66 ;
+	color: white ;
+    }
+.eventCalendar .color-2{
+	background-color: #AA66FF ;
+	color: black ;
+    }
+.eventCalendar .color-2:hover,.eventCalendar .color-2.active{
+	background-color: #6600FF ;
+	color: white ;
+    }
+.eventCalendar .color-3{
+	background-color: #FFFF66 ;
+	color: black ;
+    }
+.eventCalendar .color-3:hover,.eventCalendar .color-3.active{
+	background-color: #AAAA00 ;
+	color: white ;
+    }
+
+.eventCalendar .color-4{
+	background-color: #66FFFF ;
+	color: black ;
+    }
+.eventCalendar .color-4:hover,.eventCalendar .color-4.active{
+	background-color: #00AAAA ;
+	color: white ;
+    }
+
+.eventCalendar .past .color-0,
+.eventCalendar .past .color-1,
+.eventCalendar .past .color-2,
+.eventCalendar .past .color-3,
+.eventCalendar .past .color-4{
+    opacity: 0.8;
+    -ms-filter: ~"progid:DXImageTransform.Microsoft.Alpha(opacity=(80))"; 
+    filter: ~"alpha(opacity = (80))";
+    }

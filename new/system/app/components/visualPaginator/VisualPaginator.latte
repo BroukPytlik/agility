@@ -1,0 +1,44 @@
+
+{*
+ * @version    $Id: template.phtml 2 2009-07-13 20:58:52Z david@grudl.com $
+ * @param Paginator $paginator
+ * @param array     $steps
+ *}
+
+{if $paginator->pageCount > 1}
+<div class="paginator" data-role="controlgroup" data-type="horizontal">
+    
+    <div class="previous"  >
+	{if $paginator->isFirst()}
+	    <a disabled='disabled' class="no-link ui-disabled" >&laquo;</a>
+	    <a disabled='disabled' class="no-link ui-disabled" >&lsaquo; Předchozí</a>
+	{else}
+	    <a   href="{link this, 'page' => $paginator->firstPage - 1}" class="no-link ajax" >&laquo;</a>
+	    <a   href="{link this, 'page' => $paginator->page - 1}" class="no-link ajax" >&lsaquo; Předchozí</a>
+	{/if}
+    </div>
+
+    <div class="pages" >
+	
+	{foreach $steps as $step}
+	    {if $step == $paginator->page}
+		    <a id="page-{$step}" class="current" class="no-link"  data-theme="e" >{$step}</a>
+	    {else}
+		    <a   id="page-{$step}" href="{link this, 'page' => $step}" class="no-link ajax" >{$step}</a>
+	    {/if}
+	    {if $iterator->nextValue > $step + 1}</div><span>…</span><div class="pages" >{/if}
+	{/foreach}
+    </div>
+
+    <div class="next"  >
+	{if $paginator->isLast()}
+	    <a disabled='disabled'  class="no-link ui-disabled">Další &rsaquo;</a>
+	    <a disabled='disabled'  class="no-link ui-disabled">&raquo;</a>
+	{else}
+	    <a  href="{link this, 'page' => $paginator->page + 1}" class="no-link ajax" >Další &rsaquo;</a>
+	    <a  href="{link this, 'page' => $paginator->lastPage}" class="no-link ajax" >&raquo;</a>
+	{/if}
+    </div>
+    
+</div>
+{/if}

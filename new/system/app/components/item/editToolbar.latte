@@ -1,0 +1,19 @@
+<div class="editToolbar zindex1">
+    <div class="agility-select" show-text="false" icon-primary="ui-icon-gear" icon-secondary="ui-icon-triangle-1-s">
+	<button></button>
+	<ul class="agility-select-content  hidden-js">
+	    <li>
+		<a href="{plink Edit:admin id=>$id,noFlashes=>true}" class="ajax no-link" role="editOpen" for="{$id}">
+		    <span class="ui-icon ui-icon-pencil"></span>
+		    Upravit
+		</a>
+	    </li>
+	    <li>
+		<a href="{plink Edit:delete id=>$id}" class="no-link editDeleteButton"  role="editDelete" for="{$id}">
+		    <span class="ui-icon ui-icon-trash"></span>
+		    Smazat
+		</a>
+	    </li>
+	</ul>
+    </div>
+</div>

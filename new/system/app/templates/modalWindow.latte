@@ -1,0 +1,34 @@
+{cache}
+<div id="modalWindow-edit" title="Úprava záznamu">
+    {*<div id="adminEditLoader">Načítám...</div>
+    <iframe id="adminEditForm" frameBorder="0"></iframe>*}
+    <div id="adminEditAjax" frameBorder="0">
+	{snippet editAdminAjaxForm}
+	{/snippet}
+    </div>
+</div>
+<div id="modalWindow-confirm" title="Varování!">
+    <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>Opravdu chcete tuto položku smazat? Tato akce je nevratná!</p>
+</div>
+
+<script n:syntax="double">
+    $(function() {
+	agility.agilityUI = agilityUI;
+	agility.window = $( "#modalWindow-edit" );
+	agility.data = $( "#adminEditForm" );
+	agility.loader = $( "#adminEditLoader" );
+	agility.ajaxData = $( "#adminEditAjax" );
+	agility.confirm = $( "#modalWindow-confirm" );
+	agility.callback = function(){
+	    agilityUI.jqueryuiInit();
+	   // agilityUI.calendarInit()
+	}
+	
+	agility.handleEdit($('body'))
+	agility.run();
+	
+	
+	
+    });
+</script>
+{/cache}

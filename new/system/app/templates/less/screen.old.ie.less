@@ -1,0 +1,54 @@
+@import "definitions.less";
+/**
+ * this file contain media queries replacement for IE 8 and lower
+ */
+
+#outer-content{
+    width: 77%;
+}
+#sidebar{
+    float : right; 
+	width: 19%;
+	margin: 0.5em 1em ;
+}    
+
+#viewControl{
+    #viewControlButtons{
+	display:inline;
+	#viewMode {
+		display:inline;
+		margin-left: 1em;
+	}
+	 #linkAddNew{
+		position:absolute;
+		right:5px;
+		top:0.5em;
+	}
+    }
+}
+.paginator{
+    .pages, .previous, .next{
+	    display: inline-block
+	}
+}
+#itemsList{
+    margin: 0 1em ;  
+}
+.item{
+    h4{
+	width: 100%;
+    }
+
+    .left{ 
+	    width: 60%;
+	    float: left;
+    }
+    .right{  
+	    width: 38%; 
+	    margin-left:  62%; 
+    }
+}
+
+.calendarYear{
+    display: inline-block;
+}

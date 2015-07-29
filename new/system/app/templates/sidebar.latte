@@ -1,0 +1,67 @@
+
+    <div id="sidebar">
+	<div id="newsBlock">
+	    <h3>Co je nového?</h3>
+	    <small>
+		<p>Omlouváme se za docasnou nedostupnost na zacatku
+		prosince 2014.</p>
+			
+		<!--<a id="newsDialogOpener" href="#" >Zobrazit více</a>-->
+	    </small>
+	    
+	    <script>
+		$(function(){
+		    $( "#newsDialogOpener" ).click(function() {
+			$( "#newsDialog" ).dialog( "open" );
+			return false;
+		    });
+		});
+	    </script>
+	</div>
+	<div>
+	    <div id="googleAds2">
+		<!-- adSense -->
+		<script type="text/javascript"><!--
+		  google_ad_client = "ca-pub-5856486854525775";
+		  /* v menu agility */
+		  google_ad_slot = "0945696863";
+		  google_ad_width = 180;
+		  google_ad_height = 150;
+		  //-->
+		  </script>
+		  <script type="text/javascript"
+		  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+		</script>
+		<!-- /adSense -->
+	    </div>
+
+	    <div id="vzkaznik" >
+		<h3>Váš vzkaz pro nás</h3>
+		<small>Pokud máte nějaké připomínky či návrhy k tomuto webu, 
+		    nebo potřebujete upravit údaje, napište nám.
+		</small>
+		{snippet sidebar}
+		{form sendMessageForm}
+		    <div>
+			{label email /}
+			<div  style="position:relative;padding-right:20px">
+			{input email}
+			</div>
+		    </div>
+		    <div>
+			{label text /}
+			<div style="position:relative;padding-right:20px">
+			{input text cols=>17}
+			</div>
+		    </div>
+		    {label kontrolni /}
+		    {input kontrolni}
+		    <div class="send-button">
+			{input send}
+		    </div>
+		{/form}
+		{/snippet}
+	    </div>
+	</div>
+    </div>
+    

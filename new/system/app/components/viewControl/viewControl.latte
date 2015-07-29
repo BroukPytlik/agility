@@ -1,0 +1,67 @@
+{* 
+ * @var string $pageUrl
+ * @var string $filter
+ * @var array $filters
+ * @var array $page
+ * @var array $ordered
+ * @var array $orderLinks
+*}
+<div class="filter">
+{if $filters !== NULL}
+    {snippet viewFilter}
+    {* create list of filters - this select needs to have z-index 3, 
+    because jquery give the created elements z-index 2 and when they are 
+    on small display, it would be under the next one select *}
+    <div class="agility-select zindex3"  icon-secondary="ui-icon-triangle-1-s" >
+	{? $buttonText = !empty($filter) && isset($filters[$filter])? $filters[$filter] : $page['texts']['filterAll'] }
+	<button>{$buttonText}</button>
+	<ul class="agility-select-content hidden-js zindex4" role="navigation" aria-labelledby="Filtr výběru dat - aktuálně {$buttonText}" >
+	    <li  n:class="($filter == NULL) ? 'ui-state-disabled' : ''"><a n:href="this filter=>NULL"  class="ajax no-link">{$page['texts']['filterAll']}</a></li>
+	    <li n:foreach="$filters as $url => $name" n:class="$url == $filter? 'ui-state-disabled' : ''">
+		{if $url == $filter}
+		<a class="no-link">{$name}</a>
+		{else}
+		<a href="{plink this vc-filter=>$url,vp-page=>NULL}" class="ajax no-link">{$name}</a>
+		{/if}
+	    </li>
+	</ul>
+    </div>
+    {/snippet}
+{/if}
+</div>
+{* create list of order rules *}
+
+<div class="order" n:if="count($orderLinks)">
+    {snippet viewOrder}
+      <div class="agility-select "  icon-secondary="ui-icon-triangle-1-s" >
+	<button {=!empty($isCalendar)?"disabled='disabled'"}>Dle {$ordered['text']}</button>
+
+	<ul n:if="empty($isCalendar)" class="agility-select-content hidden-js zindex4" role="navigation" aria-labelledby="Řazení - aktuálně dle {$ordered['text']}" >
+	    <li n:foreach="$orderLinks as $link" n:class="($ordered['text'] == $link['text'])? 'ui-state-disabled' : ''">
+		{if ($ordered['text'] == $link['text'])}
+		<a class="no-link">Dle {$link['text']}</a>
+		{else}
+		<a n:href="this orderBy=>$link['column']" class="ajax no-link">Dle {$link['text']}</a>
+		{/if}
+	    </li>
+	</ul>
+	
+    </div>
+{/snippet}
+</div>
+<div class="printHide" id="viewControlButtons" >
+    <div id="viewMode">
+	{if empty($isCalendar) && isset($page['settings']['calendar'])}
+	<a id="calendarLink" href="{plink Calendar:default page=>$pageUrl, vc-order=>NULL, vc-orderBy=>NULL}"  class=" ajax  no-link" title="Jako kalendář" >Jako kalendář</a>
+	    <a  id="listLink" class="current no-link" >Jako seznam</a>
+	{elseif !empty($isCalendar)}
+	    <a id="calendarLink" class="current no-link" >Jako kalendář</a>
+	    <a  id="listLink" href="{plink Item:default item=>$pageUrl, vc-order=>NULL, vc-orderBy=>NULL}"  class=" ajax no-link" >Jako seznam</a>	    
+	    
+	{else}
+	    <a disabled='disabled' id="calendarLink" class="no-link" >Jako kalendář</a>
+	    <a disabled='disabled' id="listLink" class="no-link" >Jako seznam</a>
+	{/if}
+    </div>	
+    <a n:if="$canAdd" href="{= $presenter->link('Item:new',array('item'=>$pageUrl,'vc-orderBy'=>NULL,'vc-order'=>NULL,'vc-filter'=>NULL))}" id="linkAddNew" class="no-link ajax">{$page['texts']['addNew']}</a>
+</div>

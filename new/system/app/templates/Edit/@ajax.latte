@@ -1,0 +1,170 @@
+{**
+ * My Application layout template.
+ *
+ * @param string   $basePath web base path
+ * @param string   $robots   tell robots how to index the content of a page (optional)
+ * @param array    $flashes  flash messages
+
+
+
+ *}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="description" content="Nette Framework web application skeleton">
+        <meta name="robots" content="{$robots}" n:ifset="$robots">
+        <link rel="shortcut icon" href="{$basePath}/favicon.ico">
+
+        <title>{block title|striptags} Edit - Akce Agility{/block} - Tulak.me</title>
+
+
+        
+
+	{control css}
+	{control cssPrint}
+	{control js}
+	<script n:syntax="double">
+	    
+	      
+            /** setup other things */
+             $.nette.ext('datepicker', {
+                    load: function () {
+			// because calendar prefilled format
+                        setTimeout(function(){init();},1);
+                        
+                    } // end ajax load
+                });
+            
+            
+            /** setup onLoad things */
+            $(function () {
+                $.nette.init();
+            /* Czech initialisation for the jQuery UI date picker plugin. */
+            /* Written by Tomas Muller (tomas@tomas-muller.net). */
+                $.datepicker.regional['cs'] = {
+                    closeText: 'Zavřít',
+                    prevText: '&#x3c;Dříve',
+                    nextText: 'Později&#x3e;',
+                    currentText: 'Nyní',
+                    monthNames: ['leden', 'únor', 'březen', 'duben', 'květen', 'červen', 'červenec', 'srpen',
+                        'září', 'říjen', 'listopad', 'prosinec'],
+                    monthNamesShort: ['led', 'úno', 'bře', 'dub', 'kvě', 'čer', 'čvc', 'srp', 'zář', 'říj', 'lis', 'pro'],
+                    dayNames: ['neděle', 'pondělí', 'úterý', 'středa', 'čtvrtek', 'pátek', 'sobota'],
+                    dayNamesShort: ['ne', 'po', 'út', 'st', 'čt', 'pá', 'so'],
+                    dayNamesMin: ['ne', 'po', 'út', 'st', 'čt', 'pá', 'so'],
+                    weekHeader: 'Týd',
+                    dateFormat: 'dd. mm. yy',
+                    firstDay: 1,
+                    isRTL: false,
+                    showMonthAfterYear: false,
+                    yearSuffix: ''
+                };
+                $.datepicker.setDefaults($.datepicker.regional['cs']);
+                
+                
+                
+		/** autoload for filter selecting */
+		$('#stateSelector').change(function(){
+		    $('#stateSelectorButton').click();
+		});
+		/** toggle form visibility */
+		$('#formVisibilityToggle').click(function(){
+		    $('#formVisibility').toggle(100);
+		    $('#formVisibileSymbol').toggle();
+		    $('#formInvisibileSymbol').toggle();
+		    return false;
+		});
+
+                
+            }); // end of onLoad
+
+function jqueryuiInit(){
+    $( "input[type=submit], button" ).button();
+    $( ".paginator .links" ).hide();
+    $( ".paginator .previous" ).buttonset();
+    $( ".paginator .pages" ).buttonset();
+    $( ".paginator .next" ).buttonset();
+    $(".paginator a").each(function(){
+	if(this.getAttribute('disabled'))$(this).button('disable');
+    });
+   // $( ".paginator .buttonset" ).find('button,a').button();
+};
+
+function init(){
+    jqueryuiInit();
+    $("input.date").each(function () { // input[type=date] does not work in IE
+	var el = $(this);
+	var value = el.val();
+
+	var format = value.search('-') == -1 ? $.datepicker.regional.cs.dateFormat : $.datepicker.W3C;
+	var date = (value ? $.datepicker.parseDate(format, value) : null);
+
+	var minDate = el.attr("min") || null;
+	if (minDate) minDate = $.datepicker.parseDate($.datepicker.W3C, minDate);
+	var maxDate = el.attr("max") || null;
+	if (maxDate) maxDate = $.datepicker.parseDate($.datepicker.W3C, maxDate);
+
+	// input.attr("type", "text") throws exception
+	if (el.attr("type") == "date") {
+	    var tmp = $("<input/>");
+	    $.each("class,disabled,id,maxlength,name,readonly,required,size,style,tabindex,title,value,data-nette-rules".split(","), function(i, attr)  {
+		tmp.attr(attr, el.attr(attr));
+	    });
+
+	    tmp.data(el.data());
+	    el.replaceWith(tmp);
+	    el = tmp;
+	}
+	el.datepicker({
+	    minDate: minDate,
+	    maxDate: maxDate
+	});
+	el.val($.datepicker.formatDate(el.datepicker("option", "dateFormat"), date));
+    });
+
+
+
+
+    /** initialize tooltips */
+    //$( ".selector" ).tooltip({ content: "Awesome title!" });
+    $("input, textarea, button").each(function(){
+        tooltip = $(this).parent().children('small');
+        if(tooltip.length){
+            $(this).tooltip({
+                position: { my: "left+15 center", at: "right center" } ,
+            });
+            /** this ugly thing is here because the tooltip always
+             *created title attribute in parent <form> and filled it
+             * with text like "[HTML Dom Element]"
+             */
+            $(this).tooltip('option', {close: (function(){
+                    $(this).parents('form').removeAttr('title');
+                })
+            });
+            tooltip.hide();
+        } 
+    });
+}
+	</script>
+	{block head}{/block}
+    <script n:syntax="double">
+	$(function(){
+	    onValidHandler = function(){
+		parent.$(parent.document).trigger("agility.iframe-validated");
+	    }
+	    {{if $saveAttempt}}
+		parent.$(parent.document).trigger("agility.iframe-save");
+	    {{else}}
+		parent.$(parent.document).trigger("agility.iframe-loaded");
+	    {{/if}}
+	});
+    </script>
+	<script>document.write('<style>.hidden-js { display: none; }<' + '/style>');</script>
+    </head>
+
+    <body>
+	<div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
+	{block content}
+    </body>
+</html>

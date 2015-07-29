@@ -1,0 +1,29 @@
+
+
+{block title}
+EDITACE {*$page->name*}
+{/block}
+
+{block content}
+    {snippet editUserForm}
+    {include './editForm.latte'}
+	    <p>
+		<small>
+		    Z bezpečnostních důvodů bude rovněž uložena vaše <span id="ipTooltip" title="IP adresa je jednoznačný identifkátor vašeho připojení k internetu; obvykle má celá domácnost nebo dům adresu stejnou." style="border-bottom: 1px dotted black;cursor: help;display:inline-block;">IP adresa</span>.
+		</small>
+		<script>
+		    $("#ipTooltip").tooltip({
+			position: { my: "center bottom-5", at: "center top" } ,
+			close: function(){ }
+		    });
+		</script>
+	    </p>
+    {/snippet}
+
+{/block}
+
+
+{block head}
+
+
+{/block}

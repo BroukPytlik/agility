@@ -1,0 +1,27 @@
+Agility akce
+by Jan Ťulák (jan@tulak.me)
+
+All config is in app/config/.
+For new page (race, parkour, ...) add settings into app/config/layout.neon
+and create new template in app/components/item/name_of_page.latte.
+
+
+
+Validace nastavení při spuštění base presenteru! (možná dalším .neon souborem s definicemi a závislostmi...)
+
+
+Nějaký kalendář se zobrazením akcí s možností jejich rozkliknutí, nebo hover tooltip, filtrace na kraje - co použít google calendar?
+
+fulltextový vyhledávač
+
+ke vzhledu: zvýraznění ala g+? Nějaká barevná čára na boku, která se posune...
+
+
+CREATE TRIGGER trOnUserDelete
+BEFORE DELETE
+ON user
+FOR EACH row 
+BEGIN
+  DELETE FROM `permission`
+  WHERE (`userId` = old.id COLLATE utf8_bin);
+END; 

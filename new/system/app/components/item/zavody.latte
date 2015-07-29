@@ -1,0 +1,52 @@
+{* because of calendar table has another name for id *}
+{? $id = isset($item->id) ? $item->id : $item->item_id}
+    <div n:class="item, $classes, $isOld ? shaded" name="{$id}"  aria-labelledby="Závod"  {if empty($isCalendar)}agility-reload="{plink //Ajax:getOne data=>$item->id}" tabindex="0"{/if}>
+	
+	<div class="left" >
+	    <div class="name">
+		<h4>{$data->title}
+		    <span n:if="$isOld" class="alreadyInPast">Již proběhlo</span>
+		    <span n:if="$currentEvent" class="alreadyInPast">Probíhá dnes</span>
+		</h4>
+		<div class="details">
+		    {if $data->duration > 0}
+			Od {$data->date|date:'j. n. Y'}, potrvá {=($data->duration+1)} {if $data->duration >= 5}dní{else}dny{/if}
+		    {else}
+			{$data->date|date:'j. n. Y'}
+		    {/if}
+		    - {$filters[$data->state]}
+		    
+		</div>
+	    </div>
+	    <div  class="info"><span class="title">Další informace:</span>
+		{*!$data->info|escape|linkify|shortify|parseLinks|nl2br*}
+		{!$data->info|unescape|texy}
+	    </div>
+	    <div style="clear:right"></div>
+	</div>
+	<div class="right" >
+	    <div class="location"><span class="title">Místo konání:</span>
+		{if !empty($data->location)}
+		    {!$data->location|unescape|texy}
+		{/if}
+		{if !empty($data->gps)}
+		    <span class="gps">
+			GPS: {$data->gps}
+		    </span>
+		{/if}
+		{? $addr=!empty($data->gps)?$data->gps : $data->location;}
+		<a target="_blank"  class="google-maps no-link" href="http://maps.google.com?q={$addr|stripTags|stripUrls|url}">
+		    <img  title="Odkaz na Google mapy" alt="Odkaz na Google mapy" width="50" height="50"src="{$basePath}/images/google-maps-icon.png"/>
+		</a>
+	    </div>
+	    <div style="clear:right"></div>
+	    <div class="contact"><span class="title">Kontakt:</span>
+		{!$data->contact|unescape|texy}
+	    </div>
+	    <div style="clear:right"></div>
+	</div>
+	<div class="cleaner"></div>
+	{*<div class="border"></div>*}
+	{if $isAdmin && empty($isCalendar)}{include 'editToolbar.latte', id=>$item->id}{/if}
+    </div>
+	

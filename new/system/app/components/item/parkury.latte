@@ -1,0 +1,35 @@
+{* because of calendar table has another name for id *}
+{? $id = isset($item->id) ? $item->id : $item->item_id}
+<div n:class="item, $classes, $isOld ? shaded" name="{$id}"  aria-labelledby="Parkur" {if empty($isCalendar)}agility-reload="{plink //Ajax:getOne data=>$item->id}" tabindex="0"{/if}>
+	
+	<div class="left">
+	    <div class="name" style="border-bottom:0px">
+		<h4>{$data->title}</h4>
+		<div class="details"  >
+		    {$data->date|date:'j. n. Y'}
+		    {* print duration*}
+		    {if !empty($data->dateTo) && $data->dateTo != $data->date}
+			až {$data->dateTo|date:'j. n. Y'}
+		    {/if}
+		    {!$data->location|unescape|texy}
+		</div>
+	    </div>
+	</div>
+	<div class="right short">
+	    <div class="location"><span class="title">Autor:</span>
+		    {$data->author}
+	    </div>
+	    <div style="clear:right"></div>
+	    
+	</div>
+	<div class="cleaner"></div>
+	<div  class="info">
+	    <span class="title">Info</span>
+	    {!$data->info|unescape|texy}
+	</div>
+	    <div style="clear:right"></div>
+	{*<div class="border" style="right:13em"></div>*}
+	{if $isAdmin && empty($isCalendar)}{include 'editToolbar.latte', id=>$item->id}{/if}
+    </div>
+	
+

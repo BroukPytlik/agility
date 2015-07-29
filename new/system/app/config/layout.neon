@@ -1,0 +1,509 @@
+#
+#
+# types:
+# - shortText - one-line text input
+# - longText - textarea input
+# - select - select box
+# - calendar - one-line input for date witch calendar
+# - location - textarea, but parset for creating/gettin maps link
+# syntax:
+#   pageUrl:
+#       settings:   # Settings for the page
+#	    lvlForAdding: 0 # Minimal user lvl for adding new item, 0 means everyone
+#			    # 1 means trustfull users, 2 means full permissions and admins
+#	    sortableDate: true # Available sorting by date of adding?
+#	    sortable1:		 # Another column for sorting - must be one of
+#		column: state	 # Column must be one of items from Form section
+#		order: ASC	 # Order in which will be sorted
+#				 # Sortables can be also used for filtering.
+#                                # Maximum is sortable3. 
+#                                # Note: Change here does not change data in
+#                                # database! // TODO convert script
+#	    filter:			#If set, filtering by some value will be available.
+#		type: form/database	# If you use some select from the form section,
+#		data: item/column	# then filtering will be work with options of this
+#					# select. If database is uset, then as filtering values
+#					# will be used unique value from given column.
+#
+#	    shadePast: true	    # must be handled in template - can shade old items
+#	    delete:		    # autodelete based on date-type values in one of db columns
+#		column: sortable2
+#		time: '-1 year'	 
+#	    css:			# css variables for this page
+#		cLinkDark: '#666011'	# variableName: value
+#					# NOTE: webtemp/cssloader-* must be deleted manualy
+#					# after changes here!
+#		    
+#       texts:      # Texts for the page
+#       form:       # Data types
+#           something:      # One item 
+#               type: select        # Type is select
+#               mandatory: false    # Must be this input filled? Optional.
+#                                   # If is not given, then is equal false
+#               text: "Something"   # Showed name of this input
+#               hint: "This is not mandatory" # Optional hint
+#               options:            # Options for selectbox .
+#                                   # Mandatory for selectbox.
+#                   - "A"
+#                   - "B"           # Can be given as indexed array' - "text"'
+#                   x: "X"          # or associated array 
+#               defaultValue: 0     # Default value
+#               
+#            
+parameters:   
+	pageLayout:
+		zavody:
+			settings:
+				lvlForAdding: 0 # minimal user lvl for adding new item
+				sendEmail: true
+				itemsPerPage: 20  # max items per page
+				sortByDefault: sortable2
+				sortable1: 
+					column: state # another column for sorting
+					order: ASC
+				sortable2: 
+					column: date # another column for sorting
+					order: ASC
+				sortable3: 
+					column: title # another column for sorting
+					order: ASC
+				filter: 
+					type: form
+					data: state
+				calendar: # needs from column and to or duration column
+					from: date
+					duration: duration
+				shadePast: true	# proprietary, must be handled in template
+				hide: 
+					column: sortable2
+					time: '-1 days'
+				delete: 
+					column: sortable2
+					time: '-4 years'
+				css:	
+					c2: '#fffefa'
+					c7: '#fffcee'
+					c5: '#fef5ce'
+					c9: '#F7F3E7'
+					c8: '#eee5be'
+					c10: '#ded5ae'
+					c6: '#cec59e'
+					c4: '#C0BC91'
+					c3: '#969051'
+					c1: '#666011'
+					# screen.less
+					cLinkDark: %pageLayout.zavody.settings.css.c1%		# p3 - page links text (and bg on hover)
+					cLinkLight: %pageLayout.zavody.settings.css.c2%			# p5 - page links text on hover
+					cH1: %pageLayout.zavody.settings.css.c3%				# p3 - H1 color
+					cH1Active: %pageLayout.zavody.settings.css.c4%			# p2 - H1 color on hover
+					# screen.layout.less
+					cPageBackground: %pageLayout.zavody.settings.css.c5%	# p1 - page backgeround 
+					cWrapperBorder: %pageLayout.zavody.settings.css.c6%	# p3 - outer border
+					cWrapperBackground: %pageLayout.zavody.settings.css.c7%	# p4 - background under top header and footer
+					cHeaderBackground: %pageLayout.zavody.settings.css.c2%	# background under links in header
+					cHeaderBorder: %pageLayout.zavody.settings.css.c8%	# border on top of links
+					cNavLink: %pageLayout.zavody.settings.css.c1%		# color of text in links
+					cNavLinkHover: %pageLayout.zavody.settings.css.c9%	# background of hovered links
+					cContentBorder: %pageLayout.zavody.settings.css.c10%	# top and bottom border of content
+					# screen.content.less
+					cFooterFont: %pageLayout.zavody.settings.css.c6%		# text color in footer
+					cItemBorder: 'black'		# border color of items
+			texts:
+				title: "Závody"
+				addNew: "Přidat závod"
+				notice: "Umísťujte sem akce jen tehdy, máte-li svolení od jejich organizátora."
+				successAdd: "Akce byla přidána. Během několika minut by vám měl přijít potvrzující email s odkazem k případné editaci."
+				successEdit: "Akce byla upravena."
+				successRemove: "Akce byla odstraněna."
+				failAdd: "Akci se nepodařilo přidat!"
+				failEdit: "Akci se nepodařilo upravit!"
+				filter: 'Vyberte kraj'
+				filterAll: 'Všechny kraje'
+				sortable2: 'data konání'
+				sortable3: 'jména akce'
+			form:
+				title:
+					type: shortText
+					mandatory: true
+					text: "Název akce"
+				date:
+					type: calendar
+					mandatory: true
+					text: "Datum"
+					min: today # today or '+15 days' or '-2 months'
+				duration:
+					type: select
+					options:
+						- "1 den"
+						- "2 dny"
+						- "3 dny"
+						- "4 dny"
+						- "5 dní"
+						- "6 dní"
+						- "7 dní"
+						- "více než 7 dní"
+					mandatory: true
+					text: "Trvání akce"
+					defaultValue: 0
+				location:
+					type: location
+					mandatory: true
+					text: "Místo konání"
+					placeholder: "Odkaz na Mapy Google bude vytvořen automaticky."
+				gps:
+					type: shortText
+					mandatory: false
+					text: "GPS"
+					placeholder: "Nepovinné."
+				info:
+					type: longText
+					mandatory: true
+					text: "Další informace"
+					placeholder: "Tip: Odkazy můžete vložit buď přímo, nebo také jako \"popis odkazu\":www.seznam.cz."
+				state:
+					type: select
+					options:
+						zadny: 'Žádný'
+						jihocesky: 'Jihočeský'
+						jihomoravsky: 'Jihomoravský'
+						karlovarsky: 'Karlovarský'
+						kralovehradecky: 'Kralovehradecký'
+						liberecky: 'Liberecký'
+						moravskoslezsky: 'Moravskoslezský'
+						olomoucky: 'Olomoucký'
+						pardubicky: 'Pardubický'
+						plzensky: 'Plzeňský'
+						praha: 'Praha'
+						stredocesky: 'Středočeský'
+						ustecky: 'Ústecký'
+						vysocina: 'Vysočina'
+						zlinsky: 'Zlínský'
+						zahranici: 'Zahraničí'
+					mandatory: true
+					text: "Kraj"
+				contact:
+					type: longText
+					mandatory: true
+					text: "Kontakt"
+					placeholder: "Nezapomeňte uvést nějaký kontakt."
+		
+		soustredeni:
+			settings:
+				lvlForAdding: 0 # minimal user lvl for adding new item
+				sendEmail: true
+				itemsPerPage: 20  # max items per page
+				sortByDefault: sortable2
+				sortable1: 
+					column: state # another column for sorting
+					order: ASC
+				sortable2: 
+					column: date # another column for sorting
+					order: ASC
+				sortable3: 
+					column: title # another column for sorting
+					order: ASC
+				filter: 
+					type: form
+					data: state
+				calendar: # needs from column and to or duration column
+					from: date
+					to: dateTo
+				shadePast: true	# proprietary, must be handled in template
+				hide: 
+					column: sortable2
+					time: '-1 days'
+				delete: 
+					column: sortable2
+					time: '-4 years'
+				css:
+					c1: '#4A6DA6'
+					c2: '#F8FBFF'
+					c3: '#4A6DA6'
+					c5: '#CADEFF'
+					c4: '#8AA4CE'
+					c6: '#4A6DA6'
+					c7: '#EAF2FF'
+					c8: '#B6D0F8'
+					c9: '#DEEBFF'
+					c10: '#8AA4CE'
+					# screen.less
+					cLinkDark: %pageLayout.soustredeni.settings.css.c1%		# p3 - page links text (and bg on hover)
+					cLinkLight: %pageLayout.soustredeni.settings.css.c2%			# p5 - page links text on hover
+					cH1: %pageLayout.soustredeni.settings.css.c3%				# p3 - H1 color
+					cH1Active: %pageLayout.soustredeni.settings.css.c4%			# p2 - H1 color on hover
+					# screen.layout.less
+					cPageBackground: %pageLayout.soustredeni.settings.css.c5%	# p1 - page backgeround 
+					cWrapperBorder: %pageLayout.soustredeni.settings.css.c4%	# p3 - outer border
+					cWrapperBackground: %pageLayout.soustredeni.settings.css.c7%	# p4 - background under top header and footer
+					cHeaderBackground: %pageLayout.soustredeni.settings.css.c2%	# background under links in header
+					cHeaderBorder: %pageLayout.soustredeni.settings.css.c8%	# border on top of links
+					cNavLink: %pageLayout.soustredeni.settings.css.c1%		# color of text in links
+					cNavLinkHover: %pageLayout.soustredeni.settings.css.c9%	# background of hovered links
+					cContentBorder: %pageLayout.soustredeni.settings.css.c10%	# top and bottom border of content
+					# screen.content.less
+					cFooterFont: %pageLayout.soustredeni.settings.css.c6%		# text color in footer
+					cItemBorder: 'black'		# border color of items
+			texts:
+				title: "Soustředění a tábory"
+				addNew: "Přidat akci"
+				notice: "Umísťujte sem akce jen tehdy, máte-li svolení od jejich organizátora."
+				successAdd: "Akce byla přidána. Během několika minut by vám měl přijít potvrzující email s odkazem k případné editaci."
+				successEdit: "Akce byla upravena."
+				successRemove: "Akce byla odstraněna."
+				failAdd: "Akci se nepodařilo přidat!"
+				failEdit: "Akci se nepodařilo upravit!"
+				filter: 'Vyberte kraj'
+				filterAll: 'Všechny kraje'
+				sortable2: 'data konání'
+				sortable3: 'jména akce'
+			form:
+				title:
+					type: shortText
+					mandatory: true
+					text: "Název akce"
+				date:
+					type: calendar
+					mandatory: true
+					text: "Datum zahájení"
+					min: today
+				dateTo:
+					type: calendar
+					mandatory: true
+					text: "Datum ukončení"
+					min: today
+					greaterEqualThen: date # filled value must be bigger then value in another form
+					#greaterThen: date # filled value must be bigger then value in another form
+				location:
+					type: location
+					mandatory: true
+					text: "Místo konání"
+					placeholder: "Odkaz na Mapy Google bude vytvořen automaticky."
+				gps:
+					type: shortText
+					mandatory: false
+					text: "GPS"
+					placeholder: "Nepovinné. "
+				info:
+					type: longText
+					mandatory: true
+					text: "Další informace"
+					placeholder: "Tip: Odkazy můžete vložit buď přímo, nebo také jako \"popis odkazu\":www.seznam.cz."
+				state:
+					type: select
+					options:
+						zadny: 'Žádný'
+						jihocesky: 'Jihočeský'
+						jihomoravsky: 'Jihomoravský'
+						karlovarsky: 'Karlovarský'
+						kralovehradecky: 'Kralovehradecký'
+						liberecky: 'Liberecký'
+						moravskoslezsky: 'Moravskoslezský'
+						olomoucky: 'Olomoucký'
+						pardubicky: 'Pardubický'
+						plzensky: 'Plzeňský'
+						praha: 'Praha'
+						stredocesky: 'Středočeský'
+						ustecky: 'Ústecký'
+						vysocina: 'Vysočina'
+						zlinsky: 'Zlínský'
+						zahranici: 'Zahraničí'
+					mandatory: true
+					text: "Kraj"
+				contact:
+					type: longText
+					mandatory: true
+					text: "Kontakt"
+					placeholder: "Nezapomeňte uvést nějaký kontakt."
+		
+		parkury:
+			settings:
+				lvlForAdding: 1 # minimal user lvl for adding new item
+				sendEmail: false
+				itemsPerPage: 30    # max items per page
+				sortable1:  
+					column: author # another column for sorting
+					order: ASC
+				sortable2: 
+					column: date # another column for sorting
+					order: DESC
+				sortable3:  
+					column: title # another column for sorting
+					order: ASC
+				filter: 
+					type: database
+					data: sortable1
+				css:
+					c1: '#466B26'
+					c2: '#F7FFF0'
+					c3: '#BBD3A6'
+					c5: '#D3FFAE'
+					c4: '#7DA25E'
+					c6: '#4A6DA6'
+					c7: '#EBFFDB'
+					c8: '#D1E7BE'
+					c9: '#E2FFCA'
+					c10: '#A6BF92'
+					# screen.less
+					cLinkDark: %pageLayout.parkury.settings.css.c1%		# p3 - page links text (and bg on hover)
+					cLinkLight: %pageLayout.parkury.settings.css.c2%			# p5 - page links text on hover
+					cH1: %pageLayout.parkury.settings.css.c4%				# p3 - H1 color
+					cH1Active: %pageLayout.parkury.settings.css.c3%			# p2 - H1 color on hover
+					# screen.layout.less
+					cPageBackground: %pageLayout.parkury.settings.css.c5%	# p1 - page backgeround 
+					cWrapperBorder: %pageLayout.parkury.settings.css.c4%	# p3 - outer border
+					cWrapperBackground: %pageLayout.parkury.settings.css.c7%	# p4 - background under top header and footer
+					cHeaderBackground: %pageLayout.parkury.settings.css.c2%	# background under links in header
+					cHeaderBorder: %pageLayout.parkury.settings.css.c8%	# border on top of links
+					cNavLink: %pageLayout.parkury.settings.css.c1%		# color of text in links
+					cNavLinkHover: %pageLayout.parkury.settings.css.c9%	# background of hovered links
+					cContentBorder: %pageLayout.parkury.settings.css.c10%	# top and bottom border of content
+					# screen.content.less
+					cFooterFont: %pageLayout.parkury.settings.css.c3%		# text color in footer
+					cItemBorder: 'black'		# border color of items
+			texts:
+				title: "Parkury"
+				addNew: "Přidat parkur"
+				successAdd: "Parkur byl přidán."
+				successEdit: "Parkur byl upraven."
+				successRemove: "Parkur byl odstraněn."
+				failAdd: "Parkur se nepodařilo přidat!"
+				failEdit: "Parkur se nepodařilo upravit!"
+				filter: 'Vyberte autora'
+				filterAll: 'Všichni autoři'
+				sortable1: 'jména autora'
+				sortable2: 'jména parkuru'
+				sortable3: 'data závodu'
+			form:
+				title:
+					type: shortText
+					mandatory: true
+					text: "Jméno parkuru"
+				author:
+					type: shortText
+					mandatory: true
+					text: "Autor"
+				date:
+					type: calendar
+					mandatory: true
+					text: "Datum závodu"
+				dateTo:
+					type: calendar
+					mandatory: false
+					text: "Datum ukončení"
+					#greaterEqualThen: date # filled value must be bigger then value in another form
+					greaterThen: date # filled value must be bigger then value in another form
+				location:
+					type: location
+					mandatory: false
+					text: "Místo konání"
+					placeholder: "Volitelné."
+				info:
+					type: longText
+					mandatory: false
+					text: "Další informace"
+					placeholder: "Volitelné. Tip: Odkazy můžete vložit buď přímo, nebo také jako \"popis odkazu\":www.seznam.cz."
+
+		
+		kluby:
+			settings:
+				lvlForAdding: 0 # minimal user lvl for adding new item
+				sendEmail: true
+				itemsPerPage: 30    # max items per page
+				sortable1:  
+					column: state # another column for sorting
+					order: ASC
+				sortable2:  
+					column: city # another column for sorting
+					order: ASC
+				sortable3:  
+					column: title # another column for sorting
+					order: ASC
+				filter: 
+					type: form
+					data: state
+				css:
+					c1: '#A65839'
+					c2: '#FDEABB'
+					c3: '#BF9F62'
+					c5: '#FFC57E'
+					c4: '#B47339'
+					c6: '#4A6D76'
+					c7: '#FFE2B7'
+					c8: '#EBB56F'
+					c9: '#FFD595'
+					c10: '#FAD596'
+					# screen.less
+					cLinkDark: %pageLayout.kluby.settings.css.c1%		# p3 - page links text (and bg on hover)
+					cLinkLight: %pageLayout.kluby.settings.css.c2%			# p5 - page links text on hover
+					cH1: %pageLayout.kluby.settings.css.c4%				# p3 - H1 color
+					cH1Active: %pageLayout.kluby.settings.css.c3%			# p2 - H1 color on hover
+					# screen.layout.less
+					cPageBackground: %pageLayout.kluby.settings.css.c5%	# p1 - page backgeround 
+					cWrapperBorder: %pageLayout.kluby.settings.css.c3%	# p3 - outer border
+					cWrapperBackground: %pageLayout.kluby.settings.css.c7%	# p4 - background under top header and footer
+					cHeaderBackground: %pageLayout.kluby.settings.css.c2%	# background under links in header
+					cHeaderBorder: %pageLayout.kluby.settings.css.c8%	# border on top of links
+					cNavLink: %pageLayout.kluby.settings.css.c1%		# color of text in links
+					cNavLinkHover: %pageLayout.kluby.settings.css.c9%	# background of hovered links
+					cContentBorder: %pageLayout.kluby.settings.css.c10%	# top and bottom border of content
+					# screen.content.less
+					cFooterFont: %pageLayout.kluby.settings.css.c3%		# text color in footer
+					cItemBorder: 'black'		# border color of items
+			texts:
+				title: "Kluby"
+				addNew: "Přidat klub"
+				notice: "Nebude členům klubu vadit, když zde bude jejich klub uvedený?"
+				successAdd: "Klub byl přidán. Během několika minut by vám měl přijít potvrzující email s odkazem k případné editaci."
+				successEdit: "Klub byl upraven."
+				successRemove: "Klub byl odstraněn"
+				failAdd: "Klub se nepodařilo přidat!"
+				failEdit: "Klub se nepodařilo upravit!"
+				filter: 'Vyberte kraj'
+				filterAll: 'Všechny kraje'
+				sortable2: 'města'
+				sortable3: 'jména klubu'
+			form:
+				title:
+					type: shortText
+					mandatory: true
+					text: "Jméno klubu"
+				state:
+					type: select
+					options:
+						zadny: 'Žádný'
+						jihocesky: 'Jihočeský'
+						jihomoravsky: 'Jihomoravský'
+						karlovarsky: 'Karlovarský'
+						kralovehradecky: 'Kralovehradecký'
+						liberecky: 'Liberecký'
+						moravskoslezsky: 'Moravskoslezský'
+						olomoucky: 'Olomoucký'
+						pardubicky: 'Pardubický'
+						plzensky: 'Plzeňský'
+						praha: 'Praha'
+						stredocesky: 'Středočeský'
+						ustecky: 'Ústecký'
+						vysocina: 'Vysočina'
+						zlinsky: 'Zlínský'
+						zahranici: 'Zahraničí'
+					mandatory: true
+					text: "Kraj"
+				city:
+					type: shortText
+					mandatory: true
+					text: "Město"
+				location:
+					type: location
+					mandatory: true
+					text: "Adresa klubu"
+					placeholder: "Odkaz na Mapy Google bude vytvořen automaticky."
+				gps:
+					type: shortText
+					mandatory: false
+					text: "GPS"
+					placeholder: "Nepovinné. "
+				info:
+					type: longText
+					mandatory: true
+					text: "Další informace"
+					placeholder: "Tip: Odkazy můžete vložit buď přímo, nebo také jako \"popis odkazu\":www.seznam.cz."

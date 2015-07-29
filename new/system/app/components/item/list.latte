@@ -1,0 +1,31 @@
+
+{snippet itemsList}
+    {foreach $items as $item}
+	<?php
+		$isOld = false;
+		$currentEvent = false;
+		$data = json_decode($item->content); 
+		if(isset($data->date)){
+		    if(gettype($data->date) !="string") $data->date = $data->date->date;
+
+		    // compute if  item should be shaded as old
+
+		    $eventDate = strtotime($data->date);
+		    $now = strtotime(date('Y-m-d'));
+		    
+		    // for events that started in past but still are running
+		    if($shadePast && isset($data->dateTo) && gettype($data->dateTo) == "string" && $eventDate <= $now && $now <= strtotime($data->dateTo) ) $currentEvent = true;
+		    else if(isset($data->duration) &&  $eventDate <= $now && $now <= strtotime($data->date.' +'.$data->duration.'days')) $currentEvent = true;
+		    // for past events
+		    else if($shadePast && $eventDate < $now) $isOld = true;
+		    // for events wich started today
+		    else if($shadePast && $eventDate == $now) $currentEvent = true;
+		}
+	?>
+	{snippet item-$item->id}
+	    
+		{include $page.'.latte', isOld=>$isOld, data=>$data, item =>$item, classes=>($iterator->isOdd() ? odd : even),currentEvent=>$currentEvent}
+	    
+	{/snippet}
+    {/foreach}
+{/snippet}

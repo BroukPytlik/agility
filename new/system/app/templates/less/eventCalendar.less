@@ -1,0 +1,141 @@
+@import "definitions.less";
+
+/* 
+    Document   : eventCalendar
+    Created on : 18.8.2012, 10:52:51
+    Author     : kubajz
+    Description:
+        Definice vzhledu kalendáře událostí
+*/
+@fontSize:1em;
+
+@cellHeight:2em;
+@cellWidth:14.3%;
+
+#calendarControl{
+	text-align:center;
+	margin-top:1em;
+}
+.calendarYear{
+	padding:0px 20px;
+	display: block;
+	@media only screen and (min-width : @smallResWidth ) {
+	    display: inline-block;
+	}
+}
+.eventCalendar {
+    width:100%;
+    margin: 20px  0 ;
+    padding: 5px;
+    background-color: #ebf4fb;
+    border: solid 2px #b7ddf2;
+    display: inline-block;
+
+
+    table, td {
+	position: relative;
+	//border-collapse: collapse;
+	border-spacing: 1;
+	vertical-align:top;
+    }
+
+    .ec-monthTable {
+	width: 98%;
+	margin: 0 auto;
+	caption {
+	    background-color: rgba(50, 138, 220, 0.8);
+	    padding: 5px;
+	    margin-bottom: 2px;
+	    font-variant: small-caps;
+	    font-weight: bold;
+	    color: #fff;
+	}
+    }
+
+    .ec-day-inner{
+	position:relative;
+	min-height:@cellHeight;
+	_height:@cellHeight;
+    }
+
+    .ec-validDay {
+	position: relative;
+	width: @cellWidth;
+	padding: 1em 0 0 0;
+	background-color: #fff;
+	border: solid 1px #328ADC;
+	text-align: center;
+    }
+
+    .past {
+	background-color: #f0f0f0;
+	border: solid 1px #328AAA;
+	.ec-date {
+	    color: gray;
+	}
+    }
+    .today{
+	border: solid 2px red;
+	background-color: #fff;
+	.ec-date {
+	    font-weight: bold;
+	    color: red;
+	}
+    }
+
+    .ec-empty {
+	background: #ddd;
+	border: solid 1px #999;
+    }
+
+    .ec-eventDay {
+	/*background-color: #328ADC;*/
+	//color: #fff;
+	
+    }
+    .ec-date{
+	    font-size:0.7*@fontSize;
+	    color: black;
+	    position: absolute;
+	    top: -15px;
+	    left: 3px;
+    }
+    .ec-event {
+	cursor: pointer;
+	padding: 1px 3px;
+	font-size: 0.9*@fontSize;
+	position:relative;
+	.details{
+	    position:absolute;
+	    display:none;
+	    padding:0 !important;
+	    font-size:@fontSize;
+	    //z-index: 1;
+	}
+    }
+    .ec-bottomNavigation a {
+	margin: 5px 2px;
+	border: solid 1px rgba(50, 138, 220, 0.8);
+    }
+    .editToolbar {
+	display:none;
+    }
+}
+.calendarItem .item{
+	border:0px  !important;
+	margin-top:0px !important;
+	font-size:@fontSize !important;
+	.title{
+	    font-size:0.9*@fontSize !important;
+	}
+}
+.calendar-page{
+
+    .ui-dialog-content{
+	padding:0px !important;
+	background-color:#fafafa !important;
+    }
+    .ui-dialog{
+	background-color:#fafafa !important;
+    }
+}

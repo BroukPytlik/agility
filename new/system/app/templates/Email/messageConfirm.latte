@@ -1,0 +1,17 @@
+{layout '@layout.latte'}
+{block body}
+	<p>
+	    Vážený uživateli Agility akcí
+	</p>
+	<p>
+	    Děkujeme za váš vzkaz, pokusíme se odpovědět co nejdříve. Text vašeho vzkazu je níže:
+	</p>
+	---------------------- VZKAZ ----------------------------
+	<p>{$params['text']}</p>
+	------------------- KONEC VZKAZU ------------------------
+	    
+{/block }
+	    
+{block title}
+	Potvrzení zaslaného vzkazu
+{/block}

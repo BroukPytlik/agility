@@ -1,0 +1,33 @@
+
+{block title}
+Nový záznam
+{/block}
+
+{block content}
+
+    {snippet form}
+	<h3 n:if="isset($page['texts']['notice'])">{$page['texts']['notice']}</h3>
+	<div id="formVisibility" n:if="$canAdd">
+	{control newItemForm}
+	    <p>
+		<small>
+		    Pro formátování textu můžete použít zápis ve formátu <a href="http://texy.info/cs/syntax">Texy!</a>, nebo HTML tagy. Vyzkoušet si to můžete <a href="http://texy.info/cs/try">tady</a>.
+		</small>
+	    </p>
+	    <p>
+		<small>
+		    Z bezpečnostních důvodů bude rovněž uložena vaše <span id="ipTooltip" title="IP adresa je jednoznačný identifkátor vašeho připojení k internetu; obvykle má celá domácnost nebo dům adresu stejnou." style="border-bottom: 1px dotted black;cursor: help;display:inline-block;">IP adresa</span>.
+		</small>
+		<script>
+		    $(function(){
+			$("#ipTooltip").tooltip({
+			    position: { my: "center bottom-5", at: "center top" } ,
+			    close: function(){ }
+			});
+		    });
+		</script>
+	    </p>
+	</div>
+    {/snippet}
+
+{/block}

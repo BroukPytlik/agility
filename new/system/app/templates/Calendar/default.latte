@@ -1,0 +1,33 @@
+
+{block title}
+{$page['texts']['title']}
+{/block}
+
+
+{block content}
+<div id="viewControlPosition" role="navigation" aria-labelledby="Ovládání výběru dat">
+	    
+	    <div id="viewControl" class="ui-widget-header">
+		{control vc}
+	    </div>
+	</div>
+	<div id="itemsList" >
+	     {cache 'itemsList-'.$pageUrl
+		.'filter-'.$filter
+		.'order-'.($ordered['text'].$ordered['order'])
+		.'-page-'.$calendarDate['year'].'-'.$calendarDate['month']
+		, expire => '+1 days'
+		, tags => ['items/'.$pageUrl]}
+	    
+		{control calendar}
+	    
+	    {/cache}
+		
+	</div>
+
+<div id="bottomFixedPosition">
+    <div id="bottomFixed" class="ui-widget-header">
+
+    </div>
+</div>	
+{/block}

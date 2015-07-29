@@ -1,0 +1,126 @@
+
+@fontSize:1em;
+
+
+/** Very huge resolution - big desktop or high density display  */
+@hugeResWidth:1800px;
+/** Huge resolution - laptops or high density tablets  */
+@bigResWidth:1200px;
+/** resolution for showing full layout */
+@fullResWidth:830px;
+/** full layout cant be shown, but if the font is smaller, we haven't to do more*/
+@semifullResWidth:700px;
+/** this is even smaller resolution, needs more changes */
+@mediumResWidth:570px;
+/** and this is minimum for some layout*/
+@smallResWidth:420px;
+/** smaller resolution then smallRes will see everything in one column*/
+
+
+/** ****************************************************************************
+ * BEGIN some settigns
+ ** ***************************************************************************/
+
+@textInputsMaxWidth:22em;
+
+
+
+@cContentBackground: white;
+
+@fText:@fontSize Arial, sans-serif;
+@cText: #333;
+@fH1: bold 1.71em Arial, sans-serif;
+@spinnerBackground:  #ddd ;
+@spinnerBackgroundImage:  url('../images/spinner-big.gif') no-repeat 50% 50%;
+
+
+    
+
+
+@wrapperWidth: 59em;
+@sidebarWidth: 10em;
+@minContentHeight: 25em;
+@contentWidth: @wrapperWidth - @sidebarWidth - 5em;
+@formWidth: 34em;
+
+/** ****************************************************************************
+ * BEGIN mixins
+ ** ***************************************************************************/
+
+.rounded-corners (@radius: 0.3em){
+   -webkit-border-radius: @radius;
+      -moz-border-radius: @radius;
+       -ms-border-radius: @radius;
+        -o-border-radius: @radius;
+	   border-radius: @radius;
+}
+
+
+.rounded-corners-top-left(@radius: 0.3em){
+   -webkit-border-top-left-radius: @radius;
+      -moz-border-top-left-radius: @radius;
+       -ms-border-top-left-radius: @radius;
+        -o-border-top-left-radius: @radius;
+	   border-top-left-radius: @radius;
+}
+.rounded-corners-top-right(@radius: 0.3em){
+   -webkit-border-top-right-radius: @radius;
+      -moz-border-top-right-radius: @radius;
+       -ms-border-top-right-radius: @radius;
+        -o-border-top-right-radius: @radius;
+	   border-top-right-radius: @radius;
+}
+.rounded-corners-bottom-left(@radius: 0.3em){
+   -webkit-border-bottom-left-radius: @radius;
+      -moz-border-bottom-left-radius: @radius;
+       -ms-border-bottom-left-radius: @radius;
+        -o-border-bottom-left-radius: @radius;
+	   border-bottom-left-radius: @radius;
+}
+.rounded-corners-bottom-right(@radius: 0.3em){
+   -webkit-border-bottom-right-radius: @radius;
+      -moz-border-bottom-right-radius: @radius;
+       -ms-border-bottom-right-radius: @radius;
+        -o-border-bottom-right-radius: @radius;
+	   border-bottom-right-radius: @radius;
+}
+.unselectable{
+	-webkit-touch-callout: none;
+	  -webkit-user-select: none;
+	   -khtml-user-select: none;
+	     -moz-user-select: none;
+	      -ms-user-select: none;
+		  user-select: none;
+}
+.opacity(@opacity) {
+    @opacityPercentage: @opacity * 100;
+    opacity: @opacity;
+    -ms-filter: ~"progid:DXImageTransform.Microsoft.Alpha(opacity=(@{opacityPercentage}))"; 
+    filter: ~"alpha(opacity = (@{opacityPercentage}))";
+}
+
+/** ****************************************************************************
+ * BEGIN dynamic colors 
+ ** ***************************************************************************/
+@cLinkDark: #666011;
+@cLinkLight: white;
+@cH1: #969051 ;
+@cH1Active: #C0BC91 ;
+    
+    
+@cFooterFont: #cec59e;		// text color in footer
+@cItemBorder: LightGray ;		// border color of items
+@cItemInnerBorder: #F0F0F0;		// border color of items
+
+
+@cPageBackground: #fef5ce;	// page backgeround 
+@cWrapperBorder: #cec59e;	// outer border
+@cWrapperBackground: #fffcee;	// background under top header and footer
+@cHeaderBackground: #fffefa;	// background under links in header
+@cHeaderBorder: #eee5be;	// border on top of links
+@cNavLinkHover: #F7F3E7;	// background of hovered links
+@cContentBorder: #ded5ae;	// top and bottom border of content
+/** ****************************************************************************
+ * END dynamic colors 
+ ** ***************************************************************************/
+

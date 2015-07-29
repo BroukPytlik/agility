@@ -1,0 +1,203 @@
+{**
+ * My Application layout template.
+ *
+ * @param string   $basePath web base path
+ * @param string   $robots   tell robots how to index the content of a page (optional)
+ * @param integer  $paginatorPage page number from paginator
+ * @param array    $flashes  flash messages
+ * @param string   $title  
+ * @param array    $page - page config  
+ * @param array    $pages - list of pages  
+ * @param string   $pageUrl  actual page - for selecting color theme and so
+ * @param boolean  $isAdmin  
+ * @param boolean  $isEdit - exists only in edit presenter
+ * @param array    $orderLinks  list of links for ordering - on item view
+ * @param array    $ordered - actual ordered by   (text, order)
+ * @param array    $filters  
+ * @param string   $filter  
+ * @param boolean  $isCalendar exists only on calendar  
+ *
+ *}
+{? 
+	\Stopwatch::start('layout');
+}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="description" content="Databáze neoficiální agility závodů, soustředění, parkurů a klubů i jiných akcí pro psy a jejich páníčky.">
+        <meta name="robots" content="{$robots}" n:ifset="$robots">
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="shortcut icon" href="{$basePath}/favicon.ico">
+
+        <title n:inner-snippet="title">{block title|striptags}{if !empty($page)}{$page->name}{/if}Akce Agility{/block} - Tulak.me</title>
+
+	
+    {cache 'head-'.$pageUrl }
+	<script n:syntax="double"  type="text/javascript">
+	    
+	    var PAGE = {{$pageUrl}}; // page name for which is actual style active
+				    // is replaced after success ajax load by payload information
+	    var newPage = PAGE;
+
+
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-22009353-1']);
+	    _gaq.push(['_setDomainName', 'agility.tulak.me']);
+	    _gaq.push(['_trackPageview']);
+
+	    (function() {
+	      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	    })();
+
+	</script>
+	    {* this is included twice because we want to set bg colors as soon as possible
+		(so small file before all others) and then we have to rewrite default settings
+	    *}
+	    <link rel="stylesheet"  n:href="//Style:default">
+	    {control css}
+	    {control cssPrint}
+	    {control cssHandheld}
+	    <link rel="stylesheet"  n:href="//Style:default">
+	    <!--[if lt IE 9]>
+	    {control cssOldIE}
+	    <![endif]-->
+	{/cache}
+	{cache 'head-'.$pageUrl.'-js-'.$user->isLoggedIn()}    
+	    {control js}
+	    {control jsIE}  
+	{/cache}
+	
+	{block head}{/block}
+	<script>document.write('<style>.hidden-js { display: none; } .display-js{ display:inline }<' + '/style>');</script>
+	
+	
+    </head>
+    <body class="{$pageUrl}-body-page {= isset($isCalendar)?'calendar-page'}">
+	{*<div id="test-media">
+	    <div id="test-very-small">VERY SMALL</div>
+	    <div id="test-small">SMALL</div>
+	    <div id="test-medium">MEDIUM</div>
+	    <div id="test-semifull">SEMIFULL</div>
+	    <div id="test-full">FULL</div>
+	    <div id="test-big">BIG</div>
+	    <div id="test-huge">HUGE</div>
+	</div>*}
+	
+	<div id="wrapper" class="{$pageUrl}-wrapper-page">
+	    <div id="header">
+		<div id="header-inner" role="banner">
+		    <h1 n:inner-snippet="header-link" class="{$pageUrl}-h1-page"><a href="{link Homepage:}" class="no-link ajax {$pageUrl}-h1a-page">{include #title}</a></h1>
+		</div>
+		<div id="header-nav" class="{$pageUrl}-header-nav-page" role="navigation">
+		    {snippet header-navigation}
+		    <div class="pages" >
+			<ul>
+			    
+			    <li n:foreach="$pages as $url=>$menuItem" class='nav{if !empty($page) && $pageUrl== $url } current{/if}'>
+				
+				{if !isset($isCalendar) || isset($menuItem['settings']['calendar'])}
+				{* because on calendar we want to stay on it, else go to item *}
+				{? $target = isset($isCalendar)? 'Calendar:' : 'Item:' }
+				    <a class="ajax {$pageUrl}-header-nav-a-page" href="{link $target $url,vc-filter=>NULL,vc-order=>NULL,vc-orderBy=>NULL}">
+					{$menuItem["texts"]["title"]} 
+				    </a>
+				{else}
+				    <a class="{$pageUrl}-header-nav-a-page disabled" >
+					{$menuItem["texts"]["title"]}
+				    </a>
+				{/if}
+			    </li>
+			   
+			</ul>
+			    
+			
+		    </div>
+		    {/snippet}
+		</div>
+		
+		
+		<div id="user" >
+		{if !$user->isLoggedIn()}
+		    <a href="{plink Sign:in}">Přihlásit se</a>
+		{else}
+		    <a href="{plink User:default}" class="icon user ajax">{$user->getIdentity()->username}</a> |
+		    <a n:href="signOut!">Odhlásit se</a>
+		{/if}
+		</div>
+		
+	    </div>
+	    <div id="container" class="{$pageUrl}-container-page">
+
+		<div id="outer-content">
+		
+		
+		    <div id="content">
+			<div id="itemsContent" role="main" aria-labelledby="Hlavní obsah" aria-live="notify" >
+			    
+			{snippet flashes}
+			    <div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
+			{/snippet}
+			    
+			    
+			    {snippet main-content}  
+				{include #content}
+			    {/snippet}  
+			</div>
+
+
+		    </div>
+		</div>
+		{include 'sidebar.latte'}
+		<div class="cleaner"></div>
+		
+	    </div>
+	    <div id="footer" class="{$pageUrl}-footer-page" role="contentinfo">
+		<p>Provozovatel a autor: Jan Ťulák - <script>var a = '@';document.write('jan'+a+'tulak.me');</script></p>
+		<p>Provozovatel si vyhrazuje právo kdykoliv upravit či smazat kterýkoliv záznam a zříká se odpovědnosti za obsah umístěný uživateli.</p>
+
+	    </div>
+	    {********************************** NEWS DIALOG ************************************}
+	    <div id="newsDialog" title="Co je nového?" style="display:none">
+		<div>
+			<p>Díky za pochopení dočasné nedostupnosti, 
+			ke které došlo během stěhování serveru v 41. týdnu.</p>
+			
+			<br><p>14. 10. 2013</p>
+		</div>
+	    </div>
+	    <script>
+		$(function(){
+		    $("#newsDialog").dialog({
+			autoOpen: false,
+			show: "fade",
+			hide: "fade",
+			modal:true,
+			width: $(window).width()<600 ? $(window).width() : 600, // check correct width of window
+			minHeight: 320,
+			resizable: false,
+			buttons: { 'Zavřít': function() { $( this ).dialog( "close" ); } }
+		    })
+		});
+	    </script>
+	    {********************************** NEWS DIALOG ************************************}
+	    {? if(!isset($isEdit)) $isEdit=false; }
+	{if $user->isLoggedIn()}{include 'modalWindow.latte' isEdit=>$isEdit}{/if}
+	    
+	    {* google analytics for ajax *}
+	    {snippet ajaxStats}
+	    <script>
+		if(loaded){ 
+		    _gaq.push(['_trackPageview', '{link this}']);
+		}
+	    </script>
+	    {/snippet}
+	</div>
+    </body>
+</html>
+{?
+
+	\Stopwatch::stop('layout');
+}

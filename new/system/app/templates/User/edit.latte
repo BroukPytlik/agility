@@ -1,0 +1,56 @@
+{var $robots = 'noindex,nofollow'}
+
+{block title}
+Editace uživatele
+{/block}
+
+{block menu}
+    <div id="userMenu">
+	<a n:href="User:password" class="ajax no-link">Změna hesla</a>
+	<a n:if="$isAdmin" n:href="User:add" class="ajax no-link">Přidat uživatele</a>
+	<a n:if="$isAdmin" n:href="User:edit" class="ajax no-link">Upravit uživatele</a>
+    </div>
+{/block}
+
+{block content}
+<div id="userContent">
+    {include #menu}
+    
+    {snippet userContent}
+	{snippet selecting}
+    <div style="display:inline-block">
+	    <div class="agility-select"  icon-secondary="ui-icon-triangle-1-s" >
+	       {? $buttonText = !empty($username)? $username : 'Vyberte uživatele' }
+	       <button>{$buttonText}</button>
+	       <ul class="agility-select-content hidden-js zindex4" role="navigation" aria-labelledby="Filtr výběru dat - aktuálně {$buttonText}" >
+		   <li n:foreach="$users as $user" n:class="$user->username == $username? 'ui-state-disabled' : ''">
+		       {if $user->username == $username}
+		       <a class="no-link">{$user->username}</a>
+		       {else}
+		       <a n:href="this id=>$user->id" class="ajax no-link">{$user->username}</a>
+		       {/if}
+		   </li>
+	       </ul>
+	   </div>
+	</div>
+	{/snippet}
+	<ul class="hint">
+	    <li>Úroveň <b>Normální návštěvník</b> neposkytuje žádný rozdíl oproti nepřihlášení. </li>
+	    <li><b>Ověřený uživatel</b>  může přidávat nové položky i pokud <b>normální návětěvník</b>  nemůže</li>
+	    <li><b>Plná oprávnění</b> umožňuje editaci záznamů od jiných uživatelů.</li>
+	</ul>    
+	<p>Pouze administrátor může vytvářet nové účty.</a>
+	{snippet selected}
+	    {control editUserForm}
+	{/snippet}
+    
+    {/snippet}
+</div>
+
+{/block}
+
+
+{block head}
+<meta name="robots" content="noindex, nofollow">
+
+{/block}

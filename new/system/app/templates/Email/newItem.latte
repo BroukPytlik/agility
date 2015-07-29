@@ -1,0 +1,61 @@
+{layout '@layout.latte'}
+{block body}
+	<p>
+	    Vážený uživateli Agility akcí
+	</p>
+	{if $pageUrl == "zavody"}
+	    <p>
+		Váš závod s <b>{$params['values']['title']}</b>, který se bude konat dne {$params['values']['date']|date:'j. n. Y'} byl uložen.
+	    </p>
+	    <p>Pokud jej budete chtít upravit, 
+		můžete tak učinit na <a href="{plink //Edit:  hash=>$params['hash']}">této stránce</a>.
+	    </p>
+    	{elseif $pageUrl == "soustredeni"}
+	    <p>
+		Vaše akce <b>{$params['values']['title']}</b> 
+		{if isset($params['values']['dateTo']) && $params['values']['dateTo'] == $params['values']['date']}
+		    konající se od {$params['values']['date']|date:'j. n. Y'} do {$params['values']['dateTo']|date:'j. n. Y'} byla uložena.
+		{else}
+		    konající se {$params['values']['date']|date:'j. n. Y'} byla uložena.
+		{/if}
+	    </p>
+	    <p>Pokud ji budete chtít upravit, 
+		můžete tak učinit na <a href="{plink //Edit:  hash=>$params['hash']}">této stránce</a>.
+	    </p>
+
+	{elseif $pageUrl == "kluby"}
+	    <p>
+			Váš klub <b>{$params['values']['title']}</b> byl uložen.
+	    </p>
+	    <p>Pokud jej budete chtít upravit, 
+		můžete tak učinit na <a href="{plink //Edit:  hash=>$params['hash']}">této stránce</a>.
+	    </p>
+	{else}
+	    <p>
+		    Váš záznam byl uložen.
+	    </p>
+	    <p>Pokud jej budete chtít upravit, 
+		můžete tak učinit na <a href="{plink //Edit:  hash=>$params['hash']}">této stránce</a>.
+	    </p>
+
+	{/if}
+	<p>
+	    Pokud odkaz nefunguje, zkopírujte následující adresu do adresního řádku prohlížeče :<br>
+	    <code>
+	    {plink //Edit: hash=>$params['hash']}		
+	    </code> 
+	</p>
+	
+{/block }
+	    
+{block title}
+	{if $pageUrl == "zavody"}
+	    Potvrzení nového závodu
+    	{elseif $pageUrl == "soustredeni"}
+	    Potvrzení nové akce
+	{elseif $pageUrl == "kluby"}
+	    Potvrzení nového klubu
+	{else}
+	    Potvrzení nového záznamu
+	{/if}
+{/block}

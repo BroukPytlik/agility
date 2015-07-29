@@ -1,0 +1,149 @@
+{*
+ * @var \Nette\ArrayHash $var
+ *}
+
+	<div id="calendarControl">
+	    {if $options["showTopNav"]==TRUE}<a n:href="changeMonth!, 'year' => $prev['year'], 'month' => $prev['month']" class="ajax no-link">&laquo; {$options["topNavPrev"]}</a>{/if}
+	    <span class="calendarYear">{$names["monthNames"][$dateInfo["month"]]} {$dateInfo["year"]}</span>
+	    {if $options["showTopNav"]==TRUE}<a n:href="changeMonth!, 'year' => $next['year'], 'month' => $next['month']" class="ajax no-link">{$options["topNavNext"]} &raquo;</a>{/if}
+	</div>
+    
+    <div class="eventCalendar" n:snippet="ecCalendar" id="eventCalendar">
+	<table class="ec-monthTable">
+	    <tr>
+	<?php 
+	    $printedEvents = array();
+	    $eventColors = array(); // what color has which event
+	    $nextColor = 0; // which color will be given to next event
+	    $lastDrawenColor = -1; // color that was drawen as last
+	    $countColors = 5; // number of colours set in css
+	    
+	?>
+	{for $i = 0; $i < 7; $i++} 
+		<th>{$names["wdays"][$i]}</th>  
+	{/for}
+	    </tr>
+	{for $i = 0; $i < 6; $i++}
+	    <tr>
+	    {for $j = 1; $j <= 7; $j++}
+		{var $dayNum = $j + $i*7 - $dateInfo['firstDayInMonth']}
+		{if $dayNum > 0 && $dayNum <= $dateInfo['noOfDays']}
+		    {? 
+			$inPast = time() > strtotime($dateInfo["year"]."-".$dateInfo["month"]."-".$dayNum) ? true : false ;
+			$today = strtotime(date('Y-m-d')) == strtotime($dateInfo["year"]."-".$dateInfo["month"]."-".$dayNum) ? true : false;
+		    }
+		    {if $events->isForDate($dateInfo["year"],$dateInfo["month"],$dayNum)}
+		<td class="ec-validDay ec-eventDay {= $inPast ? 'past'} {= $today ? 'today'}">
+		    <div class="ec-day-inner">
+		    <div class="ec-date ec-dayOfEvents">{$dayNum}</div>
+		    <div class="ec-eventBox">
+			    {* we want to print details only once *}
+			    {? 
+				$list = $events->getForDate($dateInfo["year"],$dateInfo["month"],$dayNum);
+				$x=0;
+			    }
+			    {foreach $list as $event}
+			    <?php
+				// if this event has no color, select one
+				if(!isset($eventColors[$event['id']]))	{
+				    // check last color so we dont draw two same colors bellow
+				    // also check for next item color
+				    if( ($lastDrawenColor == $nextColor ) ){
+					$nextColor++;
+				    }
+				    // check for color collision with next one event (lookahead)
+				    if(isset($list[$x+1]) 
+					    && isset($eventColors[$list[$x+1]['id']]) 
+					    && $eventColors[$list[$x+1]['id']] == $nextColor
+				    ){
+					$nextColor++;
+				    }
+				    $eventColors[$event['id']] = $nextColor; 
+				    $nextColor = ++$nextColor % $countColors;
+				}
+				$lastDrawenColor = $eventColors[$event['id']];
+				$x++;
+			    ?>
+			<div class="ec-event {$event['page']} color-{$eventColors[$event['id']]}" event="{$event['id']}">
+				{$event['data']->title|truncate:10}
+				{if !isset($printedEvents[$event['id']])}
+				    <?php
+					$isOld = false;
+					$currentEvent = false;
+					if(isset($event['data']->date)){
+					    if(gettype($event['data']->date) =="object") $event['data']->date = $event['data']->date->date;
+
+					    // compute if  item should be shaded as old
+
+					    $eventDate = strtotime($event['data']->date);
+					    $now = strtotime(date('Y-m-d'));
+
+					    // for events that started in past but still are running
+					    if(isset($event['data']->dateTo) &&  $eventDate <= $now && $now <= strtotime($event['data']->dateTo)) $currentEvent = true;
+					    else if(isset($event['data']->duration) &&  $eventDate <= $now && $now <= strtotime($event['data']->date.' +'.$event['data']->duration.'days')) $currentEvent = true;
+					    // for past events
+					    else if( $eventDate < $now) $isOld = true;
+					    // for events wich started today
+					    else if( $eventDate == $now) $currentEvent = true;
+					}
+					$printedEvents[$event['id']] = true;
+				    ?>
+			    <div  class="details calendarItem" for-event="{$event['id']}"  title="{$event['data']->title}" >
+				{* ------------------ DETAILS ------------------------ *}
+				{include '../item/'.$event['page'].'.latte', 
+					    item => $event['item'], 
+					    data => $event['data'], 
+					    classes => '', 
+					    isOld => $isOld,  
+					    isAdmin => $var->isAdmin, 
+					    filters => $var->filters,
+					    currentEvent=>$currentEvent,
+					    isCalendar=>true
+				}
+				{* ------------------ DETAILS ------------------------ *}
+			    </div>
+				{/if}
+			</div>
+
+			    {/foreach}
+		    </div>
+		    </div>
+		</td>
+		    {else}
+		<td class="ec-validDay {= $inPast ? 'past'} {= $today ? 'today'}">
+		    <div  class="ec-day-inner">
+		    <div class="ec-date">{$dayNum}</div>
+		    </div>
+		</td>
+		    {/if}
+		{else}
+		<td class="ec-empty"></td>
+		{/if}
+	    {/for}
+	    </tr>
+	    {breakIf ($dayNum >= $dateInfo['noOfDays'] && $i != 6)}
+	{/for}
+	</table>
+	{if $options["showBottomNav"]==TRUE}
+	<div class="ec-bottomNavigation">
+	    <a n:href="changeMonth!, 'year' => $prev['year'], 'month' => $prev['month']" class="ajax">{$options["bottomNavPrev"]}</a>
+	    <a n:href="changeMonth!, 'year' => $next['year'], 'month' => $next['month']" class="ajax">{$options["bottomNavNext"]}</a>
+	</div>
+	{/if}
+    </div>
+
+
+<script>
+     $(function(){
+	$("#calendarControl").buttonset();
+	
+	calendar.setDialogs($("#eventCalendar"))
+	$.nette.ext('calendar', null);
+	$.nette.ext('calendar',{
+	   load:function(){
+	    calendar.destroyDialogs();
+	   } 
+	    
+	});
+    });
+</script>

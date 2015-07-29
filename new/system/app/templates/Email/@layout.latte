@@ -1,0 +1,28 @@
+<html>
+    <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>{block title}{$subject}{/block}</title>
+	<style>
+	    p{
+		font-size: 100%;
+	    }
+	    small {
+		font-size: 90%;
+	    }
+	    #footer {
+		margin-top:150%;
+		font-size: 90%;
+	    }
+	</style>
+    </head>
+    <body>
+
+{include #body}
+
+	<p>Děkujeme za vaši přízeň.</p>
+	<p id="footer">
+	    S pozdravem<br>
+	    Tým <a href="mailto:agility@tulak.me">Agility Ťulák.me</a>
+	</p>
+    </body>
+</html>

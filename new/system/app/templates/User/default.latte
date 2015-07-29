@@ -1,0 +1,30 @@
+{var $robots = 'noindex,nofollow'}
+
+{block title}
+Uživatelský panel
+{/block}
+
+{block menu}
+    <div id="userMenu">
+	<a n:href="User:password" class="ajax no-link">Změna hesla</a>
+	<a n:if="$isAdmin" n:href="User:add" class="ajax no-link">Přidat uživatele</a>
+	<a n:if="$isAdmin" n:href="User:edit" class="ajax no-link">Upravit uživatele</a>
+    </div>
+{/block}
+
+{block content}
+<div id="userContent" >
+    {include #menu}
+    {snippet userContent}
+    {/snippet}
+</div>
+
+{/block}
+
+
+{block head}
+<meta name="robots" content="noindex, nofollow">
+
+{/block}
+
+

@@ -1,0 +1,99 @@
+#
+# SECURITY WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
+#
+# If you don't protect this directory from direct web access, anybody will be able to see your passwords.
+# http://nette.org/security-warning
+#
+common:
+	parameters:
+		email: #for sending emails
+			send: false
+			from: 'Admin <admin@example.com>'
+			smtp: 'smtp.example.com'
+			username: 'admin@example.com'
+			password: 'password'
+			secure: 'ssl'
+			
+		passwordMinLength: 1 # minimum length of password for users
+	php:
+		date.timezone: Europe/Prague
+		# zlib.output_compression: yes
+
+	nette:
+		application:
+
+		database:
+
+		session:
+			autoStart: smart
+			expiration: 65500
+		debugger:
+			email: debug@example.com
+			strictMode: true
+			bar:
+				- @stopwatch
+
+
+	services:
+		authenticator: Authenticator
+
+		userRepository: Agility\UserRepository
+		itemRepository: Agility\ItemRepository
+		calendarRepository: Agility\CalendarRepository
+		permissionRepository: Agility\PermissionRepository
+		wlCssFilter: WebLoader\Filter\CssUrlsFilter(%wwwDir%)
+		stopwatch:
+			class: stopwatch
+			arguments:
+				- @application
+
+
+	webloader:
+		css:
+			default:
+				files:
+					- style.css
+					- {files: ["*.css", "*.less"], from: %appDir%/presenters} # Nette\Utils\Finder support
+				filters:
+					- @wlCssFilter
+		js:
+			default:
+				remoteFiles:
+					- http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js
+					- http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js
+				files:
+					- %appDir%/../libs/nette/nette/client-side/forms/netteForms.js
+					- web.js
+
+	factories:
+	
+	includes:
+		- layout.neon
+
+production < common:
+	parameters:
+		email: #for sending emails
+			send: true
+		developmentMode: false
+		dbPrefix: 'agility_'
+
+	nette:
+		application:
+			errorPresenter: Error
+
+		database:
+			dsn: 'mysql:host=localhost;dbname=agility'
+			user: 'mysql user'
+			password: 'mysql password'
+development < common:
+	nette:
+		application:
+			errorPresenter: Error
+
+		database:
+			dsn: 'mysql:host=localhost;dbname=agility'
+			user: 'mysql dev user'
+			password: 'mysql password'
+	parameters:
+		developmentMode: true
+		dbPrefix: ''
