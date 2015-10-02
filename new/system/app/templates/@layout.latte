@@ -32,7 +32,27 @@
 
         <title n:inner-snippet="title">{block title|striptags}{if !empty($page)}{$page->name}{/if}Akce Agility{/block} - Tulak.me</title>
 
-	
+	<style>
+		.eu-cookies {
+		position: fixed;
+		left: 0;
+		top: 0;
+		padding-top: 3pt;
+		padding-left: 5pt;
+		padding-right: 5pt;
+		padding-bottom: 5pt;
+		width: 100%;
+		color: #111;
+		background-color: #eae0ba;
+		border-bottom: #aea59e;
+		z-index: 1000;
+		}
+
+		.eu-cookies button {
+		background: #ded5ae;
+		color: #111;
+		}
+	</style>
     {cache 'head-'.$pageUrl }
 	<script n:syntax="double"  type="text/javascript">
 	    
@@ -195,8 +215,24 @@
 	    </script>
 	    {/snippet}
 	</div>
+	<div class="eu-cookies" n:if="empty($_COOKIE[eu-cookies])">
+	<!-- https://phpfashion.com/jak-na-souhlas-s-cookie-v-eu -->
+		Tento web používá k poskytování služeb, personalizaci reklam a analýze
+		návštěvnosti soubory cookie. Používáním tohoto webu s tím souhlasíte.
+		<button>V pořádku</button><br>
+		<a href="https://www.google.com/policies/technologies/cookies/">Další informace</a>
+	</div>
+<noscript><style>.eu-cookies { display:none }</style></noscript>
     </body>
 </html>
+<script>
+$('.eu-cookies button').click(function() {
+    var date = new Date();
+    date.setFullYear(date.getFullYear() + 10);
+    document.cookie = 'eu-cookies=1; path=/; expires=' + date.toGMTString();
+    $('.eu-cookies').hide();
+});
+</script>
 {?
 
 	\Stopwatch::stop('layout');
